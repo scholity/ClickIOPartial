@@ -49,7 +49,41 @@
         today = yyyy + '-' + mm + '-' + dd;
         component.set("v.MaxDate",today);
     },
-    
+
+    validateEmail : function(component, event, helper) {
+        log.console("validateEmail!!!");
+        var isValidEmail = true;
+        var emailField = component.find("emailField");
+        var emailFieldValue = emailField.get("v.value");
+        // Store Regular Expression That 99.99% Works. [ http://emailregex.com/]
+        //var regExpEmailformat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        var regExpEmailformat = /[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}\\@[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}(\\.[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25})+/;
+        // check if Email field in not blank,
+        // and if Email field value is valid then set error message to null,
+        // and remove error CSS class.
+        // ELSE if Email field value is invalid then add Error Style Css Class.
+        // and set the error Message.
+        // and set isValidEmail boolean flag value to false.
+
+        if(!$A.util.isEmpty(emailFieldValue)){
+            if(emailFieldValue.match(regExpEmailformat)){
+                emailField.set("v.errors", [{message: null}]);
+                $A.util.removeClass(emailField, 'slds-has-error');
+                isValidEmail = true;
+            }else{
+                $A.util.addClass(emailField, 'slds-has-error');
+                log.console("Here!!!");
+                emailField.set("v.errors", [{message: "Please Enter a Valid Email Address"}]);
+                isValidEmail = false;
+            }
+        }
+
+        // if Email Address is valid then execute code
+        if(isValidEmail){
+            // code write here..if Email Address is valid.
+        }
+    },
+
     productCountIncrement: function (component, event, helper) {
         component.set("v.CCProductId",event.getParam('productSfid'));
         helper.getLearningPlanAttributes(component, event, helper);
@@ -566,9 +600,17 @@
 
     addSession : function(component, event, helper) {
         var tempList = component.get("v.cpsWrap.sessionList");
+        console.log("tempList");
+        console.log(tempList);
+        console.log(tempList[0].timeZone);
+        console.log(tempList[0].timeZoneName);
+
+        //console.log(tempList.timeZoneName[0]);
         tempList.push({'classDate':'',
             'startTime':'',
-            'endTime':''
+            'endTime':'',
+            'timeZone':tempList[0].timeZone,
+            'timeZoneName':tempList[0].timeZoneName
             });
         component.set("v.cpsWrap.sessionList",tempList);
 
@@ -590,33 +632,27 @@
 
     onZoneChange : function(component, event, helper) {
         helper.requiredSchedule(component,event,helper);
-        component.set("v.zoneError",false);
 
+        var target = event.target;
+        var value = target.value;
+        var sessionIndex = target.getAttribute('data-row-index');
 
         var cpsWrap = component.get("v.cpsWrap");
-        var target = event.target;
-        var values = target.value.split(",");
-        var index = values[0];
-        var value = values[1];
+        if (cpsWrap != null) {
+            cpsWrap.sessionList[sessionIndex].timeZone = value;
+            cpsWrap.sessionList[sessionIndex].timeZoneName = (value == '' ? '' : cpsWrap.timeZoneList[value]);
 
-        component.set("v.cpsWrap", cpsWrap);
-
-        cpsWrap.sessionList[index].timeZone = value;
-
-        tempList.forEach(function(session) {
-            session.timeZone = document.getElementById('zoneSelect').value;
-
-            var temp = document.getElementById('zoneSelect');
-
-            if(session.timeZone) {
-                document.getElementById('zoneSelect').classList.remove('requiredSelect');
+            var errorDivs = component.find('zoneError');
+            if (cpsWrap.sessionList.length == 1) {
+                errorDivs = [errorDivs];        // convert the single div into an array
             }
-            else {
-                component.set("v.zoneError",true);
-                document.getElementById('zoneSelect').classList.add('requiredSelect');
+
+            if (cpsWrap.sessionList[sessionIndex].timeZone == '') {
+                $A.util.removeClass(errorDivs[sessionIndex], 'hide');
+            } else {
+                $A.util.addClass(errorDivs[sessionIndex], 'hide');
             }
-        });
-        component.set("v.cpsWrap.sessionList",tempList);
+        }
     },
 
     zoneUpdate : function(component, event, helper) {

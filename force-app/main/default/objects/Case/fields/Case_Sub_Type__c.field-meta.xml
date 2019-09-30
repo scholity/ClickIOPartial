@@ -288,6 +288,11 @@
                 <label>Health Fairs</label>
             </value>
             <value>
+                <fullName>HealthStream</fullName>
+                <default>false</default>
+                <label>HealthStream</label>
+            </value>
+            <value>
                 <fullName>Individual Certificate - Digital Cert Link Sent</fullName>
                 <default>false</default>
                 <label>Individual Certificate - Digital Cert Link Sent</label>
@@ -516,6 +521,11 @@
                 <fullName>Other</fullName>
                 <default>false</default>
                 <label>Other</label>
+            </value>
+            <value>
+                <fullName>Partner Profile Update</fullName>
+                <default>false</default>
+                <label>Partner Profile Update</label>
             </value>
             <value>
                 <fullName>Password Reset</fullName>
@@ -836,6 +846,11 @@
         <valueSettings>
             <controllingFieldValue>Instructors</controllingFieldValue>
             <valueName>Certifications</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Instructors</controllingFieldValue>
+            <controllingFieldValue>Course Records</controllingFieldValue>
+            <valueName>HealthStream</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Instructors</controllingFieldValue>
@@ -1261,6 +1276,10 @@
         <valueSettings>
             <controllingFieldValue>User Account Maintenance</controllingFieldValue>
             <valueName>Learner Profile Update</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>User Account Maintenance</controllingFieldValue>
+            <valueName>Partner Profile Update</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>AP Blended Learning</controllingFieldValue>

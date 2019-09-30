@@ -5,9 +5,14 @@ private class TestAgentCommandCenterCtlr {
       
 @testSetup static void methodName() {
     Switch__c cohstest = new Switch__c();
-        cohstest.Switch__c = true;
+        cohstest.Switch__c = false;
         cohstest.name = 'CaseOwnerHistorySwitch';
         insert cohstest;
+        
+        //used to bypass validation rules on case object                
+    Validation_Rules__c supportConfig = new Validation_Rules__c();      
+    supportConfig.Bypass_Rules__c = true;    
+    insert supportConfig;
 }     
         
       static testMethod void testAcceptNextCase() {

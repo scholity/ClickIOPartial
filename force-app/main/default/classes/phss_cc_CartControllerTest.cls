@@ -8,7 +8,7 @@ public with sharing class phss_cc_CartControllerTest {
 
     public static Opportunity testOpportunity;
     public static Map<String, Object> testData;
-    public static List<ccrz__E_Product__c> products;
+    public static List<ccrz__E_Product__c> testProducts;
     public static ccrz__E_Cart__c testCart;
     public static List<ccrz__E_StoredPayment__c> testStoredPayments;
     public static Map<String, Object> productQuantityMap;
@@ -23,22 +23,17 @@ public with sharing class phss_cc_CartControllerTest {
      * @description Creates the basic testdata.
      */
     public static void setupTestData() {
-        testData = phss_cc_TestDataFactory.setupAccountAndProducts();
-        products = (List<ccrz__E_Product__c>) testData.get(phss_cc_TestDataFactory.TEST_PRODUCTS);
+        testData = phss_cc_TestDataFactory.setupAccountAndProducts(1);
+        testAccount = (Account) testData.get(phss_cc_TestDataFactory.TEST_ACCOUNT);
+        testProducts = (List<ccrz__E_Product__c>) testData.get(phss_cc_TestDataFactory.TEST_PRODUCTS);
+        testProduct = testProducts[0];
         testOpportunity = phss_cc_TestDataFactory.createInsertTestOpportunity((Account) testData.get(phss_cc_TestDataFactory.TEST_ACCOUNT));
         List<ccrz__E_Cart__c> testCarts = phss_cc_TestDataFactory.createInsertCartAndCartItems(1, testData, testOpportunity.Id);
 
-        //Create productQuantityMap
         productQuantityMap = new Map<String, Object>();
-        for (ccrz__E_Product__c product : products) {
+        for (ccrz__E_Product__c product : testProducts) {
             String productSfid = String.valueOf(product.Id);
-            productQuantityMap.put(productSfid, 2);
-        }
-
-        productQuantityMap = new Map<String, Object>();
-        for (ccrz__E_Product__c product : products) {
-            String productSfid = String.valueOf(product.Id);
-            productQuantityMap.put(productSfid, 2);
+            productQuantityMap.put(productSfid, 1);
         }
 
         testCart = testCarts[0];
@@ -47,8 +42,6 @@ public with sharing class phss_cc_CartControllerTest {
 
     public static void setupAdditional() {
 
-        testAccount = (Account) testData.get(phss_cc_TestDataFactory.TEST_ACCOUNT);
-        testOpportunity = phss_cc_TestDataFactory.createInsertTestOpportunity(testAccount);
         testLocation = phss_cc_TestDataFactory.createInsertTestGeoLocation();
 
         Map<String, Object> learningData = phss_cc_TestDataFactory.createInsertTestLearningObjects();
@@ -65,8 +58,6 @@ public with sharing class phss_cc_CartControllerTest {
         sked__Job__c job = (sked__Job__c) learningData.get(phss_cc_TestDataFactory.TEST_SKEDULO_JOB);
         job.Temp_Course__c = catalog.Name;
 
-        products = (List<ccrz__E_Product__c>) testData.get(phss_cc_TestDataFactory.TEST_PRODUCTS);
-        testProduct = products[0];
         testProduct.ccrz__InventoryType__c = 'COMMUNITY';
         testProduct.LMS_Learning_Plan__c = trainingPlan.Id;
         testProduct.Course_Catalog__c = catalog.Id;
@@ -76,13 +67,19 @@ public with sharing class phss_cc_CartControllerTest {
         testCart.Opportunity__c = testOpportunity.Id;
         update testCart;
 
-        List<ccrz__E_CartItem__c> cartItems = [SELECT Id, ccrz__Product__c, ILT_Class__c
-                        FROM ccrz__E_CartItem__c
-                        WHERE ccrz__Cart__r.Opportunity__c = :testOpportunity.Id];
+        List<ccrz__E_CartItem__c> cartItems = [
+                SELECT
+                        Id,
+                        ccrz__Product__c,
+                        ILT_Class__c
+                FROM
+                        ccrz__E_CartItem__c
+                WHERE
+                        ccrz__Cart__r.Opportunity__c = :testOpportunity.Id
+        ];
         for (ccrz__E_CartItem__c cartItem : cartItems) {
             cartItem.ccrz__Product__c = testProduct.Id;
             cartItem.ILT_Class__c = testIltClass.Id;
-            System.debug('CartItem: ' + CartItem);
             testCartItem = cartItem;
         }
 
@@ -96,6 +93,8 @@ public with sharing class phss_cc_CartControllerTest {
         v1.Status__c = 'Temp Hold';
         vs.add(v1);
 
+        /*
+        
         Voucher__c v2 = new Voucher__c();
         v2.ILT_Class__c = testIltClass.id;
         v2.Learning_Plan__c = trainingPlan.Id;
@@ -107,6 +106,8 @@ public with sharing class phss_cc_CartControllerTest {
         v3.Learning_Plan__c = trainingPlan.Id;
         v3.Status__c = 'Issued';
         vs.add(v3);
+
+         */
 
         Voucher__c v4 = new Voucher__c();
         v4.ILT_Class__c = testIltClass.id;
@@ -137,7 +138,7 @@ public with sharing class phss_cc_CartControllerTest {
         Test.startTest();
 
         Map<String, Object> updateCartProductsResult = phss_cc_CartController.updateCartProducts(testOpportunity.Id, productQuantityMap);
-        for (ccrz__E_Product__c product : products) {
+        for (ccrz__E_Product__c product : testProducts) {
             String productSfid = String.valueOf(product.Id);
             productQuantityMap.put(productSfid, 2);
         }
@@ -155,7 +156,7 @@ public with sharing class phss_cc_CartControllerTest {
 
         Map<String, Object> updateCartProductsResult = phss_cc_CartController.updateCartProducts(testOpportunity.Id, productQuantityMap);
 
-        for (ccrz__E_Product__c product : products) {
+        for (ccrz__E_Product__c product : testProducts) {
             String productSfid = String.valueOf(product.Id);
             productQuantityMap.put(productSfid, 3);
         }
@@ -175,7 +176,7 @@ public with sharing class phss_cc_CartControllerTest {
 
         Map<String, Object> updateCartProductsResult = phss_cc_CartController.updateCartProducts(testOpportunity.Id, productQuantityMap);
 
-        for (ccrz__E_Product__c product : products) {
+        for (ccrz__E_Product__c product : testProducts) {
             String productSfid = String.valueOf(product.Id);
             productQuantityMap.put(productSfid, 1);
         }
@@ -252,6 +253,52 @@ public with sharing class phss_cc_CartControllerTest {
         Test.startTest();
         phss_cc_CartController.getOpportunityApprovalStatus (testOpportunity.Id);
         Test.stopTest();
+    }
+
+    @IsTest
+    public static void testFetchActiveCartAndItems() {
+        setupTestData();
+        testCart.ccrz__ActiveCart__c = true;
+        update testCart;
+
+        Test.startTest();
+        Map<String, Object> result = phss_cc_CartController.fetchActiveCartAndItems(testOpportunity.Id);
+        Test.stopTest();
+
+        System.assert(result != null);
+    }
+
+    @IsTest
+    public static void testUpdateCartItemQuantities() {
+        setupTestData();
+        testCart.ccrz__ActiveCart__c = true;
+        update testCart;
+
+        List<ccrz__E_CartItem__c> cartItems = [SELECT Id, ccrz__Quantity__c FROM ccrz__E_CartItem__c WHERE ccrz__Cart__c = :testCart.Id];
+        Map<String, Object> cartItemQuantityMap = new Map<String, Object>();
+        for (ccrz__E_CartItem__c cartItem : cartItems) {
+            cartItemQuantityMap.put(cartItem.Id, cartItem.ccrz__Quantity__c.intValue() + 1);
+        }
+
+        Test.startTest();
+        Map<String, Object> result = phss_cc_CartController.updateCartItemQuantities(testOpportunity.Id, cartItemQuantityMap);
+        Test.stopTest();
+
+        System.assert(result != null);
+        if (result != null) {
+            Integer inputTotal = 0;
+            for (String cartItemId : cartItemQuantityMap.keySet()) {
+                inputTotal += (Integer) cartItemQuantityMap.get(cartItemId);
+            }
+
+            Map<String, Object> quantityMap = (Map<String, Object>) result.get(phss_cc_CartUtil.CART_ITEM_QUANTITY_MAP_KEY);
+            Integer resultTotal = 0;
+            for (String cartItemId : quantityMap.keySet()) {
+                resultTotal += ((Decimal) quantityMap.get(cartItemId)).intValue();
+            }
+
+            System.assertEquals(inputTotal, resultTotal);
+        }
     }
     
     @isTest

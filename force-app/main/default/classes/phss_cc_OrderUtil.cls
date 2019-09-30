@@ -91,6 +91,8 @@ public with sharing class phss_cc_OrderUtil {
     private static final String FAILED_TO_GET_ORIGINAL_ORDER_FOR_STORED_PAYMENT = 'Failed to get original order for stored payment.';
     private static final String FAILED_TO_PARSE_PAYMENT_DATA = 'Failed to parse payment data.';
     private static final String FAILED_TO_FETCH_STORED_PAYMENT = 'Failed to fetch stored payment.';
+    private static final String FAILED_TO_ASSIGN_CASE_CONTACT_TO_ORDER = 'Failed to assign case contact to order.';
+    private static final String FAILED_TO_IDENTIFY_ORDER_ASSOCIATION_TO_CASE = 'Failed to identify an association between an order and a case.';
     private static final String FAILED_TO_UPDATE_STORED_PAYMENT = 'Failed to update stored payment.';
     private static final String FAILED_TO_REFUND_CREDIT = 'Failed to refund credit';
     private static final String PO_INSUFFICIENT_FUNDS_AVAILABLE = 'The balance of this Purchase Order does not cover your order. Please update value or set up a new Purchase Order to complete your order.';
@@ -273,7 +275,8 @@ public with sharing class phss_cc_OrderUtil {
             if (isSuccess) {
                 orderId = (String) placeOrderResponse.get(ccrz.ccApiCart.ORDER_ID);
                 message = SUCCESSFULLY_CREATED_AN_ORDER;
-            } else{
+                assignCaseContactToOrder(orderId);
+            } else {
                 message = ERROR_MESSAGE_FAILED_TO_CREATE_ORDER;
             }
             return new Map<String, Object>{
@@ -730,6 +733,30 @@ public with sharing class phss_cc_OrderUtil {
 
         } catch (Exception e) {
             throw new phss_cc_Exception(FAILED_TO_CREATE_A_TRANSACTION_RECORD_ON_THE_ORDER);
+        }
+    }
+
+    /**
+     * @description Assigns the contact on the case (if associated to one) to the order
+     *
+     * @param orderId
+     */
+    @TestVisible
+    private static void assignCaseContactToOrder(String orderId) {
+        try {
+            ccrz__E_Order__c order = [
+                    SELECT  Opportunity_Order__r.Case__r.ContactId,
+                            ccrz__Contact__c
+                    FROM    ccrz__E_Order__c
+                    WHERE   Id = :orderId
+            ];
+            if (order != null && order.Opportunity_Order__r.Case__r.ContactId != null && order.ccrz__Contact__c == null) {
+                order.ccrz__Contact__c = order.Opportunity_Order__r.Case__r.ContactId;
+                update order;
+            }
+
+        } catch (Exception e) {
+            throw new phss_cc_Exception(FAILED_TO_ASSIGN_CASE_CONTACT_TO_ORDER, e); 
         }
     }
 

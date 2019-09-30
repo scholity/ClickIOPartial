@@ -28,6 +28,11 @@
                 <label>Add/Update Contact Info on Profile</label>
             </value>
             <value>
+                <fullName>Add Portal Access</fullName>
+                <default>false</default>
+                <label>Add Portal Access</label>
+            </value>
+            <value>
                 <fullName>AP/LTP</fullName>
                 <default>false</default>
                 <label>AP/LTP</label>
@@ -248,6 +253,16 @@
                 <label>Performance</label>
             </value>
             <value>
+                <fullName>Portal Access - need additional information</fullName>
+                <default>false</default>
+                <label>Portal Access - need additional information</label>
+            </value>
+            <value>
+                <fullName>Portal Access - referred to Sales</fullName>
+                <default>false</default>
+                <label>Portal Access - referred to Sales</label>
+            </value>
+            <value>
                 <fullName>Portal Billing</fullName>
                 <default>false</default>
                 <label>Portal Billing</label>
@@ -266,6 +281,11 @@
                 <fullName>Recertification</fullName>
                 <default>false</default>
                 <label>Recertification</label>
+            </value>
+            <value>
+                <fullName>Remove Portal Access</fullName>
+                <default>false</default>
+                <label>Remove Portal Access</label>
             </value>
             <value>
                 <fullName>Retail</fullName>
@@ -633,6 +653,22 @@
         <valueSettings>
             <controllingFieldValue>MTN</controllingFieldValue>
             <valueName>Roster</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Partner Profile Update</controllingFieldValue>
+            <valueName>Add Portal Access</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Partner Profile Update</controllingFieldValue>
+            <valueName>Portal Access - need additional information</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Partner Profile Update</controllingFieldValue>
+            <valueName>Portal Access - referred to Sales</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Partner Profile Update</controllingFieldValue>
+            <valueName>Remove Portal Access</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Certifications</controllingFieldValue>

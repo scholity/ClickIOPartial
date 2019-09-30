@@ -2278,10 +2278,6 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>Coupon Not Applied</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>Coupon Not Created</fullName>
             <default>false</default>
         </values>

@@ -50,8 +50,8 @@
     
     <aura:if isTrue="{!v.stepNumber == 'Zero'}" >
         <aura:if isTrue="{!v.isCourse}">
-            <lightning:button label		= "Credit OR Refund"
-                              title		= "Credit OR Refund"
+            <lightning:button label		= "Credit or Refund"
+                              title		= "Credit or Refund"
                               onclick	= "{!c.showStep1}"
                               class		= "slds-button_brand intialButton"/>
             
@@ -102,7 +102,7 @@
                             <div class="slds-size_4-of-12 slds-m-around_x-small columnHeaders">Name</div>
                             <div class="slds-size_1-of-12 slds-m-around_x-small columnHeaders">Qty</div> 
                             <div class="slds-size_2-of-12 slds-m-around_x-small columnHeaders">Price</div>
-                            <div class="slds-size_3-of-12 slds-m-around_x-small columnHeaders">Extended Amount</div>
+                            <div class="slds-size_3-of-12 slds-m-around_x-small columnHeaders">Refund Amount</div>
                         </div>
                         <aura:iteration items="{!v.orderItemList}" var="oItem">
                             <div class="slds-grid slds-border_bottom">

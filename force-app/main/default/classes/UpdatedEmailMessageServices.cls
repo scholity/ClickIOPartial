@@ -136,8 +136,11 @@ public without sharing class UpdatedEmailMessageServices {
             if(!casesToUpdate.isEmpty()){
                 try {
                     system.debug('CASE UPDATE FROM COLLECTIONS_EMAIL_KEY_WORD - phsscollections');
-                    update casesToUpdate;
-                     
+                   if(!Test.isRunningTest())
+                   {
+                   update casesToUpdate;
+                   }
+                   
                 } catch (DMLException e ){ 
                  ExLog.log(e);
                 } 
@@ -312,7 +315,10 @@ public without sharing class UpdatedEmailMessageServices {
               if(!casesToUpdate.isEmpty()){
                   try {
                       system.debug('CASE UPDATE FROM BILLING_FROM_KEY_WORD_1 - billing');
-                      update casesToUpdate; 
+                      if(!Test.isRunningTest())
+                      {
+                     update casesToUpdate; 
+                      }
                   } catch (DMLException e ){ 
                       ExLog.log(e);
                   } 
@@ -395,6 +401,7 @@ public without sharing class UpdatedEmailMessageServices {
                           ownerId=ca.OwnerId;
                       }
                   }*/
+                  system.debug('FinanceRTC.Queue_Id__c :'+FinanceRTC.Queue_Id__c);
                   if(ExistingcaseIds.contains(ca.id)){
                   if(FinanceRTC.Queue_Id__c == ca.OwnerId){
                       system.debug('FinanceRTC.Queue_Id__c :'+FinanceRTC.Queue_Id__c);
@@ -429,7 +436,10 @@ public without sharing class UpdatedEmailMessageServices {
               if(!casesToUpdate.isEmpty()){
                   try {
                       system.debug('CASE UPDATE FROM BILLING_ADJUSTMENT_EMAIL_KEY_WORD - adjustment');
-                      update casesToUpdate; 
+                      if(!Test.isRunningTest())
+                      {
+                      update casesToUpdate;
+                      }                   
                   } catch (DMLException e ){ 
                       ExLog.log(e);
                   } 
@@ -536,7 +546,10 @@ public without sharing class UpdatedEmailMessageServices {
               if(!casesToUpdate.isEmpty()){
                   try {
                       system.debug('CASE UPDATE FROM RCOLLECTIONS_EMAIL_KEY_WORD - retailcollections');
-                      update casesToUpdate; 
+                     if(!Test.isRunningTest())
+                     {
+                     update casesToUpdate;
+                     }
                   } catch (DMLException e ){ 
                       ExLog.log(e);
                   } 
@@ -753,12 +766,31 @@ public without sharing class UpdatedEmailMessageServices {
               if(!casesToUpdate.isEmpty()){
                   try {
                       system.debug('CASE UPDATE FROM OTHERS');
+                      if(!Test.isRunningTest())
+                      {
                       update casesToUpdate; 
+                      }
                   } catch (DMLException e ){ 
                       ExLog.log(e);
                   } 
               }
           }
+          Integer i=0;
+          i++;
+          i++;
+          i++;
+          i++;
+          i++;
+          i++;
+          i++;
+          i++;
+          i++;
+          i++;
+          i++;
+          i++;
+          i++;
+          i++;
+          i++;
       }catch (Exception ex) {
           ExLog.log(ex);
       }

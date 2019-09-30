@@ -52,8 +52,8 @@
     
     
     <aura:if isTrue="{!v.stepNumber == 'Zero'}" >
-        <lightning:button label		= "Transfer OR Cancel"
-                          title		= "Transfer OR Cancel"
+        <lightning:button label		= "Transfer or Cancel"
+                          title		= "Transfer or Cancel"
                           onclick	= "{!c.showStep1}"
                           class		= "slds-button_brand intialButton"/>
     </aura:if>
@@ -145,7 +145,7 @@
                             
                             <aura:if isTrue="{!v.hasPreviousDiscount}">
                                 <div class = "slds-p-top_large slds-p-bottom_large" style = "color:red;">
-                                    Previously ${!v.previousCredit} was credited on this order item. You are only allowed to give ${!v.CreditLeft} as a credit.
+                                    <!-- Previously ${!v.previousCredit} was credited on this order item. -->You are only allowed to give ${!v.CreditLeft} as a credit.
                                 </div>
                             </aura:if>
                             <aura:if isTrue="{!v.hasPolicy}">
@@ -161,7 +161,7 @@
                                     <div class="slds-size_4-of-12 slds-m-around_x-small columnHeaders">Name</div>
                                     <div class="slds-size_1-of-12 slds-m-around_x-small columnHeaders">Qty</div> 
                                     <div class="slds-size_2-of-12 slds-m-around_x-small columnHeaders">Price</div>
-                                    <div class="slds-size_3-of-12 slds-m-around_x-small columnHeaders">Extended Amount</div>
+                                    <div class="slds-size_3-of-12 slds-m-around_x-small columnHeaders">Refund Amount</div>
                                 </div>
                                 <aura:iteration items="{!v.orderItemList}" var="oItem">
                                     <div class="slds-grid slds-border_bottom">
