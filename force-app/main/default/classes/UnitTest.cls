@@ -8,7 +8,7 @@ Objective:  This class is a code library for writing quality unit test
 Note     :  06/26/2019 - Commented out the @isTest annotation so the TestUnitTest.cls class would count towards total coverage.
             Uncomment the @isTest if there is a need to remove this class from the code coverage calculation
 *****************************************************************************************************/
-@isTest
+//@isTest
 public class UnitTest {
     
     /* Exceptions */

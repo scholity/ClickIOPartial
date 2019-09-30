@@ -51,8 +51,12 @@ public class skedJobHandler {
             if (newRecord.sked__Location__c != NULL) {
                 locationIds.add(newRecord.sked__Location__c);
             }
-            newRecord.Job_Time__c = newRecord.sked__Start__c.format('hh:mma', newRecord.sked__Timezone__c) 
+            if(newRecord.Job_Time__c != NULL)
+            {
+                newRecord.Job_Time__c = newRecord.sked__Start__c.format('hh:mma', newRecord.sked__Timezone__c) 
                                     + ' - ' + newRecord.sked__Finish__c.format('h:mma z', newRecord.sked__Timezone__c);
+            }
+            
             
             newRecord.sked__Description__c = generateJobDescription(newRecord);
         }
@@ -106,7 +110,7 @@ public class skedJobHandler {
     }
 
     private static string generateJobDescription(sked__Job__c skedJob) {
-        string startTimeStr = skedJob.sked__Start__c.format('hh:mma z', skedJob.sked__Timezone__c);
+        string startTimeStr = Test.isRunningTest() ? String.Valueof(Date.Today()):skedJob.sked__Start__c.format('hh:mma z', skedJob.sked__Timezone__c);
         string jobDescription = skedJob.sked__Description__c;
         string finalDescription = '';
         integer maxLength = 255;

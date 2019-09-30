@@ -2320,10 +2320,6 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>Coupon Not Applied</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>Data Entry Error - Customer</fullName>
             <default>false</default>
         </values>

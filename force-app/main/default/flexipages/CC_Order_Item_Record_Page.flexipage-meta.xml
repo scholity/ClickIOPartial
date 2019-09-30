@@ -303,10 +303,16 @@
             </componentInstanceProperties>
             <componentName>flexipage:richText</componentName>
             <visibilityRule>
+                <booleanFilter>1 OR 2</booleanFilter>
                 <criteria>
-                    <leftValue>{!Record.Is_Return__c}</leftValue>
+                    <leftValue>{!Record.ccrz__OrderItemStatus__c}</leftValue>
                     <operator>EQUAL</operator>
-                    <rightValue>true</rightValue>
+                    <rightValue>Returned</rightValue>
+                </criteria>
+                <criteria>
+                    <leftValue>{!Record.ccrz__OrderItemStatus__c}</leftValue>
+                    <operator>EQUAL</operator>
+                    <rightValue>Return Submitted</rightValue>
                 </criteria>
             </visibilityRule>
         </componentInstances>
@@ -344,7 +350,7 @@
         <componentInstances>
             <componentName>RefundOrderItem</componentName>
             <visibilityRule>
-                <booleanFilter>1 OR 2</booleanFilter>
+                <booleanFilter>(1 OR 2 OR 3) AND 4</booleanFilter>
                 <criteria>
                     <leftValue>{!Record.ccrz__OrderItemStatus__c}</leftValue>
                     <operator>EQUAL</operator>
@@ -355,12 +361,22 @@
                     <operator>EQUAL</operator>
                     <rightValue>Shipped</rightValue>
                 </criteria>
+                <criteria>
+                    <leftValue>{!Record.ccrz__OrderItemStatus__c}</leftValue>
+                    <operator>EQUAL</operator>
+                    <rightValue>Partial Returned</rightValue>
+                </criteria>
+                <criteria>
+                    <leftValue>{!Record.Is_Return__c}</leftValue>
+                    <operator>EQUAL</operator>
+                    <rightValue>true</rightValue>
+                </criteria>
             </visibilityRule>
         </componentInstances>
         <componentInstances>
             <componentName>ReplaceOrderItem</componentName>
             <visibilityRule>
-                <booleanFilter>(1 OR 2 OR 3 or 6) AND (4 OR 5)</booleanFilter>
+                <booleanFilter>(1 OR 2 OR 3) AND (4 OR 5)</booleanFilter>
                 <criteria>
                     <leftValue>{!Record.ccrz__OrderItemStatus__c}</leftValue>
                     <operator>EQUAL</operator>
@@ -385,11 +401,6 @@
                     <leftValue>{!Record.Inventory_Type__c}</leftValue>
                     <operator>EQUAL</operator>
                     <rightValue>FEE</rightValue>
-                </criteria>
-                <criteria>
-                    <leftValue>{!Record.ccrz__OrderItemStatus__c}</leftValue>
-                    <operator>EQUAL</operator>
-                    <rightValue>Partial Shipped</rightValue>
                 </criteria>
             </visibilityRule>
         </componentInstances>

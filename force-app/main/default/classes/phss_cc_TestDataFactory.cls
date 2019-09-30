@@ -81,6 +81,9 @@ public with sharing class phss_cc_TestDataFactory {
     public static final Date TEST_COMMUNITY_CLASS_SEARCH_START_DATE = Date.today().addDays(-1);
     public static final Date TEST_COMMUNITY_CLASS_SEARCH_END_DATE = Date.today().addDays(1);
 
+    // Test data for transaction payments
+    public static final String TEST_AUTH_TXN_PMT_TOKEN = 'testTokenForAuthTransactionPayment';
+
     /**
      * @description Setups a test storefront.
      */
@@ -114,11 +117,12 @@ public with sharing class phss_cc_TestDataFactory {
         return testOpportunity;
     }
 
-    /**
-     * @description Returns a test Account.
-     *
-     * @return
-     */
+
+        /**
+         * @description Returns a test Account.
+         *
+         * @return
+         */
     public static Account createInsertTestAccount(ccrz__E_AccountGroup__c accountGroup) {
         Account testAcc = new Account(
                 Name = TEST_ACC_FIRSTNAME + ' ' + TEST_ACC_LASTNAME,
@@ -386,7 +390,8 @@ public with sharing class phss_cc_TestDataFactory {
         ccrz__E_TransactionPayment__c authTransactionPayment = new ccrz__E_TransactionPayment__c(
                 ccrz__AccountType__c = phss_cc_OrderUtil.ACCOUNT_TYPE_CREDIT_CARD,
                 ccrz__CCOrder__c = order.Id,
-                ccrz__Token__c = 'testToken'
+                ccrz__Token__c = TEST_AUTH_TXN_PMT_TOKEN,
+                ccrz__TransactionType__c = phss_cc_TransactionPaymentUtil.AUTH_TRANSACTION_TYPE
         );
         insert authTransactionPayment;
 
@@ -394,7 +399,8 @@ public with sharing class phss_cc_TestDataFactory {
                 ccrz__AccountType__c = phss_cc_OrderUtil.ACCOUNT_TYPE_CREDIT_CARD,
                 ccrz__CCOrder__c = order.Id,
                 ccrz__Token__c = 'testToken',
-                ccrz__SourceTransactionPayment__c = authTransactionPayment.Id
+                ccrz__SourceTransactionPayment__c = authTransactionPayment.Id,
+                ccrz__TransactionType__c = phss_cc_TransactionPaymentUtil.CAPTURE_TRANSACTION_TYPE
         );
         insert captureTransactionPayment;
 
@@ -456,6 +462,16 @@ public with sharing class phss_cc_TestDataFactory {
      * @return
      */
     public static Map<String, Object> setupAccountAndProducts() {
+        return setupAccountAndProducts(4);
+    }
+
+
+    /**
+     * @description Creates Account, Account group, Users, PriceLists, Products, PriceListItems.
+     *
+     * @return
+     */
+    public static Map<String, Object> setupAccountAndProducts(Integer productCount) {
 
         initCCSettings();
         setCyberSourceConfig();
@@ -471,7 +487,7 @@ public with sharing class phss_cc_TestDataFactory {
         createInsertTestAccountGroupPriceList(accountGroup, pricelist);
 
         //Products and PriceListItems
-        List<ccrz__E_Product__c> products = createInsertTestProducts(4);
+        List<ccrz__E_Product__c> products = createInsertTestProducts(productCount);
         createInsertPriceListItems(products, pricelist);
 
         ccrz.cc_CallContext.currAccountId = account.Id;
@@ -707,6 +723,44 @@ public with sharing class phss_cc_TestDataFactory {
         insert location;
 
         return location;
+    }
+
+    public static Case createInsertTestCase(Account testAccount, Contact billingContact, Contact shippingContact) {
+        System.debug('JASON: getting recordTypeId');
+        Id caseRecordTypeId = Schema.SObjectType.Case.RecordTypeInfosByName.get('Service Case Read Only').RecordTypeId;
+        System.debug('JASON: recordTypeId=' + caseRecordTypeId);
+
+        Switch__c  sw = new Switch__c ();
+        sw.Name = 'CaseOwnerHistorySwitch';
+        sw.Switch__c = false;
+        sw.Switch_Description__c = 'Test';
+        insert sw;
+        System.debug('JASON: switch inserted: ' + sw);
+
+        //for Validation rule
+        Validation_Rules__c supportConfig = Validation_Rules__c.getOrgDefaults();
+        supportConfig.Bypass_Rules__c = false;
+        upsert supportConfig Validation_Rules__c.Id;
+        System.debug('JASON: supportConfig=' + supportConfig);
+
+        try {
+            Case testCase = new Case(
+                    ContactId = billingContact.Id,
+                    Status = 'New',
+                    Priority = 'Medium',
+                    Type = 'Certificates',
+                    Origin = 'Phone',
+                    Subject = 'TestCase1',
+                    Description = 'This is a test Case',
+                    RecordTypeId = caseRecordTypeId
+            );
+            insert testCase;
+            return testCase;
+
+        } catch (Exception e) {
+            System.debug('JASON: exception caught: ' + e.getMessage() + ' lineNumber=' + e.getLineNumber() + ' stackTrace=' + e.getStackTraceString());
+            throw e;
+        }
     }
 
     /**

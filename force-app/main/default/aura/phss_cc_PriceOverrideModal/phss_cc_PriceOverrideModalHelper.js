@@ -2,11 +2,11 @@
  * Created by jbarker on 11/2/18.
  */
 ({
-    getCartItemForProduct: function (component, productSfid, opportunitySfid) {
+    getCartItemForOpportunity: function (component, cartItemId, opportunitySfid) {
         var action = component.get('c.getCartItem');
         console.log("Test1");
         action.setParams({
-            'productSfid': productSfid,
+            'cartItemId': cartItemId,
             'opportunitySfid': opportunitySfid
         });
         action.setCallback(this, function (response) {
@@ -122,9 +122,13 @@
                     var cartItem = returnValue.cartItem;
                     if (typeof cartItem !== 'undefined') {
                         component.set('v.isShown', false);
+                        component.set("v.options","");
+                        component.set("v.CouponId",null);
                         this.showToast('success', 'Coupon emoved successfully');
                         var updateEvent = $A.get('e.c:phss_cc_RefreshComponentEvent');
                         updateEvent.fire();
+                        
+                        $A.get("e.force:refreshView").fire();
                     }
                     else {
                         this.showToast('info', 'There was no cart item to update', 'Try reloading the page and attempt to override the price again.');

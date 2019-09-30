@@ -60,19 +60,26 @@ private class GarbageAccountBatchTest {
             Contact Cons = new Contact(FirstName = 'Test',LastName = 'Contact',accountId =Accs.Id);
             insert Cons;
             Case Casess=new Case();
-            Casess.Type = 'Aquatics';
+            /*Casess.Type = 'Aquatics';
             Casess.Case_Sub_Type__c = 'Lifeguarding';
             Casess.ContactId = Cons.Id;
             Casess.AccountId = Cons.AccountId;
-            insert Casess;
+            insert Casess;*/
     }  
     private static testMethod void testBatch()
     {
-
         Test.startTest();
         GarbageAccountBatch GbAcc=new GarbageAccountBatch();
            Id BatchId = Database.executeBatch(GbAcc);
         Test.stopTest();
  
     } 
+    /*private static testMethod void testBatc1()
+    {
+        final String CREATED_DATE_FIELD = String.valueof(Date.today()-30);
+        Test.startTest();
+           Id BatchId1 = Database.executeBatch(new GarbageAccountBatch(CREATED_DATE_FIELD), 50);
+        Test.stopTest();
+ 
+    } */
 }

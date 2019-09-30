@@ -33,6 +33,11 @@ public class TestGarbageAccountServices {
     */
     public static void setupRelatedObjects()
     {
+        BGST_Profiles__c BGstprof=new BGST_Profiles__c();
+        BGstprof.Name = 'Owner Profile';
+        BGstprof.Sales_Admin__c ='ARC BGST Sales Admin';
+        BGstprof.Sales_User__c = 'ARC BGST Sales User';
+        insert BGstprof;
         UnitTest.forEach('Accounts With Tasks').create(2,TestUtil.tasks).copyProperty('ID->WhatID');
         UnitTest.get(Task.SObjectType).insertAll();
         UnitTest.forEach('Accounts With Events').create(1,TestUtil.events).copyProperty('ID->WhatID');
@@ -77,8 +82,9 @@ public class TestGarbageAccountServices {
     }
     public static testMethod void testMarkAccountFlags()
     {
+        
         TestUtil.setupBucketAccountSettings();
-        UnitTest.createTestData(TestUtil.accounts).many(1000).tag('Account').divide(2)
+        UnitTest.createTestData(TestUtil.accounts).many(50).tag('Account').divide(2)
                                                   .part('Accounts To Be Untouched') 
                                                   .part('Accounts To Mark For Deletion');
         UnitTest.get('Accounts To Mark For Deletion').divide(2).part('Accounts Without Attachments Or Notes').part('Accounts With Attachments Or Notes');
@@ -97,7 +103,7 @@ public class TestGarbageAccountServices {
                                                           .part('Accounts With Contact Roles');                                               
         
         UnitTest.get('Account').insertAll();
-        UnitTest.createTestData(TestUtil.contacts).many(20).tag('Contacts').insertAll();
+        UnitTest.createTestData(TestUtil.contacts).many(10).tag('Contacts').insertAll();
         
         setupRelatedObjects();
         
